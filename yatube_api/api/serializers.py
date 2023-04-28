@@ -55,14 +55,6 @@ class FollowSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(),
     )
 
-    def validate_following(self, value):
-        """Валидатор поля following. Запрет подписки на себя."""
-        if value == self.context['request'].user:
-            raise serializers.ValidationError(
-                detail='Users cannot follow themselves.'
-            )
-        return value
-
     class Meta:
         """Настройка сериализатора модели Follow."""
         model = Follow
@@ -74,3 +66,11 @@ class FollowSerializer(serializers.ModelSerializer):
                 message='Follow already exists.'
             )
         ]
+
+    def validate_following(self, value):
+        """Валидатор поля following. Запрет подписки на себя."""
+        if value == self.context['request'].user:
+            raise serializers.ValidationError(
+                detail='Users cannot follow themselves.'
+            )
+        return value
